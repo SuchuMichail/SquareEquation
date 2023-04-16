@@ -1,3 +1,4 @@
+import WorkWithEquations.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -8,22 +9,35 @@ import java.util.List;
 
 public class TestRead {
     @BeforeClass
-    public static void setup() throws FileNotFoundException {
-        //создадим файлы input.txt и output.txt, которыми будем пользоваться в тестах
-        FileOutputStream insim=new FileOutputStream("input.txt");
-        FileOutputStream outsim=new FileOutputStream("expected.txt");
+    public static void setup() {
+        //создадим файлы input.txt, expected.txt, incorrect1.txt, incorrect2.txt,
+        //которыми будем пользоваться в тестах
 
-        try (Writer writer = new OutputStreamWriter(insim)) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream("incorrect1.txt"))) {
+            String str = "1 2 3\n4 5\n6 7 8";
+            writer.write(str);
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream("incorrect2.txt"))) {
+            String str = "1 2 3 4\n5 6 7\n";
+            writer.write(str);
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream("input.txt"))) {
             String str = "1 0 1\n2 5 -3.5\n1 1 1\n1 4 1";
             writer.write(str);
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
 
-        try (Writer writer = new OutputStreamWriter(outsim)) {
-            String str="Without Real roots\n"+
-                    "x1 = 0.5700274723201295, x2 = -3.0700274723201293\n"+
-                    "Without Real roots\n"+
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream("expected.txt"))) {
+            String str = "Without Real roots\n" +
+                    "x1 = 0.5700274723201295, x2 = -3.0700274723201293\n" +
+                    "Without Real roots\n" +
                     "x1 = -0.2679491924311228, x2 = -3.732050807568877\n";
             writer.write(str);
         } catch (IOException e) {
@@ -31,63 +45,59 @@ public class TestRead {
         }
     }
 
-
     @Test
-    public void testExceptions(){
-        Equations listOfEquations = new Equations();
-
-        //пытаюсь считать коэффициенты из файла, при этом не передав имя файла
-        try {
-            ReadEquations.readWithWay(listOfEquations,2);
-            Assert.fail("Exception not thrown");
-        }catch(IllegalArgumentException e){
-            Assert.assertTrue(e.getMessage().equals("Вы не передали имя файла, из которого читаем"));
-        }
-
-
-        //пытаюсь передать способ чтения, отличный от 1 и 2
-        try{
-            ReadEquations.readWithWay(listOfEquations,3);
-            Assert.fail("Exception not thrown");
-        }catch(IllegalArgumentException e){
-            Assert.assertTrue(e.getMessage().equals("Некорректный способ"));
-        }
-
+    public void testExceptions() {
+        AllEquations listOfEquations = new AllEquations();
 
         //пытаюсь читать из файла, в котором в одной строке меньше 3х чисел
-        try{
-            ReadEquations.readWithWay(listOfEquations,2,"incorrect.txt");
+        try {
+            IEquationsReader reader = new ReaderFromFile("incorrect1.txt");
+            reader.readEquations(listOfEquations);
+
             Assert.fail("Exception not thrown");
         } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().equals("В строке недостаточно коэффициентов"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Assert.assertEquals(e.getMessage(), "Incorrect number of coefficients");
         }
+
+        //пытаюсь читать из файла, в котором в одной строке больше 3х чисел
+        try {
+            IEquationsReader reader = new ReaderFromFile("incorrect2.txt");
+            reader.readEquations(listOfEquations);
+
+            Assert.fail("Exception not thrown");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals(e.getMessage(), "Incorrect number of coefficients");
+        }
+
     }
 
     @Test
-    public void testReadFromFile() throws FileNotFoundException {
-        //беру содержимое файла input.txt и сравниваю с коэффициентами уравнений,
-        // полученных после чтения этого файла
-        Equations listOfEquations = new Equations();
-        ReadEquations.readWithWay(listOfEquations,2,"input.txt");
+    public void testReadFromFile() {
+        //беру содержимое файла input.txt, создаю по коэффициентам уравнения,
+        //эти уравнения добавляю в объект класса AllEquation
+        // и сравниваю этот объект (ожидаемый) с объектом,
+        // полученным после использования ReaderFromFile
+        AllEquations listOfEquations = new AllEquations();
+        IEquationsReader reader = new ReaderFromFile("input.txt");
 
-        List<List<Double>> real=new ArrayList<>();
+        reader.readEquations(listOfEquations);
 
-        List<Double> firstEquation=new ArrayList<>();
-        List<Double> secondEquation=new ArrayList<>();
-        List<Double> thirdEquation=new ArrayList<>();
-        List<Double> fourthEquation=new ArrayList<>();
+        AllEquations expectedAllEquations = new AllEquations();
+        List<OneEquation> expected = new ArrayList<>();
 
         //дальше идут коэффициенты из input.txt
-        firstEquation.add(1.);firstEquation.add(0.);firstEquation.add(1.);
-        secondEquation.add(2.);secondEquation.add(5.);secondEquation.add(-3.5);
-        thirdEquation.add(1.);thirdEquation.add(1.);thirdEquation.add(1.);
-        fourthEquation.add(1.);fourthEquation.add(4.);fourthEquation.add(1.);
+        OneEquation first = new OneEquation(1, 0, 1);
+        OneEquation second = new OneEquation(2, 5, -3.5);
+        OneEquation third = new OneEquation(1, 1, 1);
+        OneEquation fourth = new OneEquation(1, 4, 1);
 
-        real.add(firstEquation);real.add(secondEquation);
-        real.add(thirdEquation);real.add(fourthEquation);
+        expected.add(first);
+        expected.add(second);
+        expected.add(third);
+        expected.add(fourth);
 
-        Assert.assertEquals(real,listOfEquations.getAllEquations());
+        expectedAllEquations.setAllEquations(expected);
+
+        Assert.assertEquals(expectedAllEquations, listOfEquations);
     }
 }

@@ -1,0 +1,10 @@
+WorkWithEquations\SolverEquations.class
+WorkWithEquations\WriterInFile.class
+WorkWithEquations\Solution.class
+WorkWithEquations\IEquationsReader.class
+WorkWithEquations\OneEquation.class
+WorkWithEquations\ReaderFromConsole.class
+WorkWithEquations\ReaderFromFile.class
+WorkWithEquations\AllEquations.class
+WorkWithEquations\ISolutionsWriter.class
+WorkWithEquations\WriterInConsole.class

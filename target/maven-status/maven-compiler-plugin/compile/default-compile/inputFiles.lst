@@ -1,5 +1,11 @@
-C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\CommunicateWithUser.java
-C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WriteSolutions.java
-C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\Equations.java
-C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\SolveEquations.java
-C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\ReadEquations.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\ConsoleCommunication\CommunicationWithUser.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\OneEquation.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\SolverEquations.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\Solution.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\ISolutionsWriter.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\ReaderFromConsole.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\WriterInConsole.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\IEquationsReader.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\WriterInFile.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\AllEquations.java
+C:\Users\Андрей\Desktop\Миша\work\java\SquareEquation\src\main\java\WorkWithEquations\ReaderFromFile.java
